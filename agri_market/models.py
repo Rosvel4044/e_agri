@@ -12,6 +12,10 @@ from django.contrib.auth.models import AbstractUser
 # =========================
 # UTILISATEUR (Client & Vendeur)
 # =========================
+from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.db import models
+
+
 class Utilisateur(AbstractUser):
     ROLE_CHOICES = (
         ('VENDEUR', 'Vendeur'),
@@ -23,24 +27,32 @@ class Utilisateur(AbstractUser):
     last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
 
-    # Rôle
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
-
-    # Champs communs
     telephone = models.CharField(max_length=20, blank=True, null=True)
 
     # Spécifique vendeur
     nom_boutique = models.CharField(
         max_length=150,
         blank=True,
-        null=True,
-        help_text="Uniquement pour les vendeurs"
+        null=True
+    )
+
+    # ✅ FIX DU PROBLÈME
+    groups = models.ManyToManyField(
+        Group,
+        related_name='agri_market_users',
+        blank=True
+    )
+
+    user_permissions = models.ManyToManyField(
+        Permission,
+        related_name='agri_market_users_permissions',
+        blank=True
     )
 
     REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
 
     def save(self, *args, **kwargs):
-        # Si l'utilisateur n'est pas vendeur, on vide le nom de boutique
         if self.role != 'VENDEUR':
             self.nom_boutique = None
         super().save(*args, **kwargs)
