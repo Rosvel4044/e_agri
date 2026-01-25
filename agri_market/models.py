@@ -88,7 +88,7 @@ class Produit(models.Model):
     description = models.TextField(blank=True)
     prix = models.DecimalField(max_digits=10, decimal_places=2)
     quantite = models.PositiveIntegerField()
-    image = models.ImageField(upload_to='produits/', blank=True, null=True)
+    #image = models.ImageField(upload_to='produits/', blank=True, null=True)
     date_ajout = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
