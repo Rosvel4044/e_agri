@@ -1,0 +1,15 @@
+Django>=4.2,<5.0
+
+# PostgreSQL
+psycopg2-binary>=2.9
+
+# Variables d’environnement (recommandé)
+python-dotenv>=1.0
+
+
+# Outils de développement
+django-filter>=23.5
+
+# Tests (optionnel)
+pytest>=8.0
+pytest-django>=4.8
