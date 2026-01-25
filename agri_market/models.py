@@ -5,11 +5,8 @@ from django.db import models
 
 from django.db import models from django.contrib.auth.models import AbstractUser
 
-=========================
+#UTILISATEUR (Client & Vendeur)
 
-UTILISATEUR (Client & Vendeur)
-
-=========================
 
 class Utilisateur(AbstractUser): ROLE_CHOICES = ( ('VENDEUR', 'Vendeur'), ('CLIENT', 'Client'), )
 
@@ -19,22 +16,21 @@ telephone = models.CharField(max_length=20, blank=True, null=True)
 def __str__(self):
     return f"{self.username} ({self.role})"
 
-=========================
 
-CATEGORIE
 
-=========================
+#CATEGORIE
 
-class Categorie(models.Model): nom = models.CharField(max_length=100, unique=True) description = models.TextField(blank=True, null=True)
+
+
+class Categorie(models.Model): 
+    nom = models.CharField(max_length=100, unique=True) 
+    description = models.TextField(blank=True, null=True)
 
 def __str__(self):
     return self.nom
 
-=========================
 
-PRODUIT
-
-=========================
+#PRODUIT
 
 class Produit(models.Model): vendeur = models.ForeignKey( Utilisateur, on_delete=models.CASCADE, related_name='produits', limit_choices_to={'role': 'VENDEUR'} ) categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='produits')
 
@@ -48,13 +44,12 @@ date_ajout = models.DateTimeField(auto_now_add=True)
 def __str__(self):
     return self.nom
 
-=========================
 
-COMMANDE (Panier inclus)
+#COMMANDE (Panier inclus)
 
-=========================
 
-class Commande(models.Model): STATUT_CHOICES = ( ('PANIER', 'Panier'), ('EN_ATTENTE', 'En attente'), ('PAYEE', 'Payée'), ('EXPEDIEE', 'Expédiée'), ('LIVREE', 'Livrée'), ('ANNULEE', 'Annulée'), )
+class Commande(models.Model): 
+    STATUT_CHOICES = ( ('PANIER', 'Panier'), ('EN_ATTENTE', 'En attente'), ('PAYEE', 'Payée'), ('EXPEDIEE', 'Expédiée'), ('LIVREE', 'Livrée'), ('ANNULEE', 'Annulée'), )
 
 client = models.ForeignKey(
     Utilisateur,
@@ -69,13 +64,15 @@ date_commande = models.DateTimeField(auto_now_add=True)
 def __str__(self):
     return f"Commande #{self.id} - {self.client.username}"
 
-=========================
 
-LIGNE DE COMMANDE
+#LIGNE DE COMMANDE
 
-=========================
 
-class LigneCommande(models.Model): commande = models.ForeignKey(Commande, on_delete=models.CASCADE, related_name='lignes') produit = models.ForeignKey(Produit, on_delete=models.CASCADE) quantite = models.PositiveIntegerField() prix_unitaire = models.DecimalField(max_digits=10, decimal_places=2)
+class LigneCommande(models.Model): 
+    commande = models.ForeignKey(Commande, on_delete=models.CASCADE, related_name='lignes') 
+    produit = models.ForeignKey(Produit, on_delete=models.CASCADE) 
+    quantite = models.PositiveIntegerField() 
+    prix_unitaire = models.DecimalField(max_digits=10, decimal_places=2)
 
 class Meta:
     unique_together = ('commande', 'produit')
@@ -83,13 +80,11 @@ class Meta:
 def __str__(self):
     return f"{self.quantite} x {self.produit.nom}"
 
-=========================
 
-PAIEMENT
+#PAIEMENT
 
-=========================
-
-class Paiement(models.Model): MODE_PAIEMENT_CHOICES = ( ('MOBILE_MONEY', 'Mobile Money'), ('CARTE', 'Carte bancaire'), ('ESPECES', 'Espèces'), )
+class Paiement(models.Model): 
+    MODE_PAIEMENT_CHOICES = ( ('MOBILE_MONEY', 'Mobile Money'), ('CARTE', 'Carte bancaire'), ('ESPECES', 'Espèces'), )
 
 STATUT_CHOICES = (
     ('EN_ATTENTE', 'En attente'),
