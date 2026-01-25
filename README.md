@@ -187,6 +187,3 @@ git push origin feature/nom_fonctionnalite
 * Commenter le code important
 * Communiquer avant de modifier les models
 
----
-
-🚀 **Projet réalisé dans un cadre académique / collaboratif**
