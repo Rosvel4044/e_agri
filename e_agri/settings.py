@@ -27,6 +27,8 @@ SECRET_KEY = 'django-insecure-i9u@=1tpi^7+@czkkx)eu*%uvkaciza4j0m^#oz1*sux)@$_1x
 DEBUG = True
 
 ALLOWED_HOSTS = []
+AUTH_USER_MODEL = 'agri_market.Utilisateur'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Application definition
