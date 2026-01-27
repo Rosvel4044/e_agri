@@ -136,18 +136,18 @@
                             </span>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'accounts:deconnexion' %}">
+                            <a class="nav-link" href="{% url 'deconnexion' %}">
                                 <i class="fas fa-sign-out-alt me-1"></i>Déconnexion
                             </a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'accounts:connexion' %}">
+                            <a class="nav-link" href="{% url 'connexion' %}">
                                 <i class="fas fa-sign-in-alt me-1"></i>Connexion
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-outline-light ms-2 px-3" href="{% url 'accounts:inscription' %}">
+                            <a class="nav-link btn btn-outline-light ms-2 px-3" href="{% url 'inscription' %}">
                                 S'inscrire
                             </a>
                         </li>
