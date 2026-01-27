@@ -9,5 +9,4 @@ app_name = 'agri_market'
 urlpatterns = [
     path('inscription/', views.inscription, name='inscription'),
     path('connexion/',   views.connexion,   name='connexion'),
-    path('deconnexion/', views.logout_view, name='deconnexion'),  # à implémenter si besoin
 ]
