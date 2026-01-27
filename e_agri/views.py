@@ -17,7 +17,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
-from .forms import InscriptionForm, ConnexionForm
+from agri_market.forms import InscriptionForm, ConnexionForm
 
 
 def inscription(request):
