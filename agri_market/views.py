@@ -17,7 +17,7 @@ def inscription(request):
             # Connexion automatique après inscription
             login(request, user)
             messages.success(request, "Compte créé avec succès ! Bienvenue.")
-            return redirect('accueil')
+            return redirect('agri_market:accueil')
         else:
             messages.error(request, "Veuillez corriger les erreurs ci-dessous.")
     else:
@@ -33,7 +33,7 @@ def connexion(request):
             user = form.get_user()
             login(request, user)
             messages.success(request, f"Bienvenue {user.get_full_name() or user.username} !")
-            return redirect('accueil')
+            return redirect('agri_market:accueil')
         else:
             messages.error(request, "Identifiants incorrects.")
     else:
@@ -48,6 +48,6 @@ def accueil(request):
     context = {
         'user_role': request.user.role if request.user.is_authenticated else None
     }
-    return render(request, 'accueil.html', context)
+    return render(request, 'agri_market:accueil.html', context)
 
 
