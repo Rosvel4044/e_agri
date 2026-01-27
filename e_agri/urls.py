@@ -19,9 +19,10 @@ from django.contrib import admin
 from django.urls import path
 
 urlpatterns = [
-    path('',index,name="home"),
+    #path('',index,name="home"),
     path('contact',contact,name="contact"),
     path('profile',profile,name="profil"),
-    path('inscription',inscription,name="inscription")
+    path('agri_market/', include('agri_market.urls')),
+    path('', views.accueil, name='accueil'),
     path('admin/', admin.site.urls),
 ]
