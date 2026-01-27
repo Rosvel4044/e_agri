@@ -17,7 +17,7 @@ def inscription(request):
             # Connexion automatique après inscription
             login(request, user)
             messages.success(request, "Compte créé avec succès ! Bienvenue.")
-            return redirect('accueil')
+            #return redirect('accueil')
         else:
             messages.error(request, "Veuillez corriger les erreurs ci-dessous.")
     else:
@@ -33,7 +33,7 @@ def connexion(request):
             user = form.get_user()
             login(request, user)
             messages.success(request, f"Bienvenue {user.get_full_name() or user.username} !")
-            return redirect('accueil')
+            #return redirect('accueil')
         else:
             messages.error(request, "Identifiants incorrects.")
     else:
@@ -42,10 +42,10 @@ def connexion(request):
     return render(request, 'connexion.html', {'form': form})
 
 
-def accueil(request):
+#def accueil(request):
     # Page d'accueil après connexion
     # Tu pourras afficher un message de bienvenue différent selon le rôle
-    context = {
-        'user_role': request.user.role if request.user.is_authenticated else None
-    }
-    return render(request, 'accueil.html', context)
+    #context = {
+    #    'user_role': request.user.role if request.user.is_authenticated else None
+    #}
+    #return render(request, 'accueil.html', context)
