@@ -43,7 +43,7 @@ def connexion(request):
 
 
 def accueil(request):
-    Page d'accueil après connexion
+    #Page d'accueil après connexion
     # Tu pourras afficher un message de bienvenue différent selon le rôle
     context = {
         'user_role': request.user.role if request.user.is_authenticated else None
