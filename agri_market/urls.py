@@ -1,9 +1,13 @@
 
+# agri_markets/urls.py
+
 from django.urls import path
-from .views import index
+from . import views
 
-
+app_name = 'agri_market'
 
 urlpatterns = [
-    path('base.html',index,name="e_agri-index"),
+    path('inscription/', views.inscription, name='inscription'),
+    path('connexion/',   views.connexion,   name='connexion'),
+    path('deconnexion/', views.logout_view, name='deconnexion'),  # à implémenter si besoin
 ]
