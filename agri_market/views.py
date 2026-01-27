@@ -23,7 +23,7 @@ def inscription(request):
     else:
         form = InscriptionForm()
 
-    return render(request, 'accounts/inscription.html', {'form': form})
+    return render(request, 'inscription.html', {'form': form})
 
 
 def connexion(request):
@@ -39,7 +39,7 @@ def connexion(request):
     else:
         form = ConnexionForm()
 
-    return render(request, 'accounts/connexion.html', {'form': form})
+    return render(request, 'connexion.html', {'form': form})
 
 
 def accueil(request):
