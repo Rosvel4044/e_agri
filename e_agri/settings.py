@@ -82,11 +82,11 @@ WSGI_APPLICATION = 'e_agri.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'agri_db',
+        'NAME': 'agri',
         'USER': 'postgres',
         'PASSWORD': 'Rosvel2004',
         'HOST': 'localhost',
-        'PORT': '5433',
+        'PORT': '5434',
     }
 }
 
