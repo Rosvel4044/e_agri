@@ -104,13 +104,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'agri_market:accueil' %}">Accueil</a>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="{% url 'liste_produits' %}">Produits</a>
-                    </li>
+                    </li> -->
                     {% if user.is_authenticated and user.role == 'VENDEUR' %}
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="{% url 'mes_produits' %}">Mes produits</a>
-                    </li>
+                    </li> -->
                     {% endif %}
                 </ul>
 
@@ -123,11 +123,11 @@
                                 <small class="text-white-50">({{ user.role|lower }})</small>
                             </span>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link" href="{% url 'deconnexion' %}">
                                 <i class="fas fa-sign-out-alt me-1"></i>Déconnexion
                             </a>
-                        </li>
+                        </li> -->
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'connexion' %}">
