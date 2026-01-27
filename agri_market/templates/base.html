@@ -88,62 +88,55 @@
 <body>
 
     <!-- Navbar corrigée -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <!-- Logo / Brand -->
-            <a class="navbar-brand" href="{% url 'agri_market:accueil' %}">
-                <i class="fas fa-leaf me-2"></i>E-Agriculture
-            </a>
-           
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <!-- Logo -->
+        <a class="navbar-brand" href="{% url 'agri_market:accueil' %}">
+            <i class="fas fa-leaf me-2"></i>E-Agriculture
+        </a>
 
-            <div class="collapse navbar-collapse" id="navbarContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarContent" aria-controls="navbarContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <!-- Liens à gauche -->
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'agri_market:accueil' %}">
+                        Accueil
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Liens à droite -->
+            <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'agri_market:accueil' %}">Accueil</a>
+                        <a class="nav-link" href="{% url 'agri_market:deconnexion' %}">
+                            <i class="fas fa-sign-out-alt me-1"></i>Déconnexion
+                        </a>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="{% url 'liste_produits' %}">Produits</a>
-                    </li> -->
-                    {% if user.is_authenticated and user.role == 'VENDEUR' %}
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="{% url 'mes_produits' %}">Mes produits</a>
-                    </li> -->
-                    {% endif %}
-                </ul>
-
-                <ul class="navbar-nav ms-auto">
-                    {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <span class="nav-link">
-                                <i class="far fa-user-circle me-1"></i>
-                                {{ user.get_full_name|default:user.username }}
-                                <small class="text-white-50">({{ user.role|lower }})</small>
-                            </span>
-                        </li>
-                        <!-- <li class="nav-item">
-                            <a class="nav-link" href="{% url 'deconnexion' %}">
-                                <i class="fas fa-sign-out-alt me-1"></i>Déconnexion
-                            </a>
-                        </li> -->
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'connexion' %}">
-                                <i class="fas fa-sign-in-alt me-1"></i>Connexion
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link btn btn-outline-light ms-2 px-3" href="{% url 'inscription' %}">
-                                S'inscrire
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'agri_market:connexion' %}">
+                            <i class="fas fa-sign-in-alt me-1"></i>Connexion
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-light ms-2 px-3"
+                           href="{% url 'agri_market:inscription' %}">
+                            Inscription
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
+
 
     <!-- Main Content -->
     <main class="flex-grow-1">
