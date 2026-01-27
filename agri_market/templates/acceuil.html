@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil - E-Agriculture{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="display-4 text-success">Bienvenue sur E-Agriculture</h1>
+            <p class="lead">Vente directe des produits agricoles au Cameroun</p>
+            
+            {% if user.is_authenticated %}
+                <p class="mt-4">Bonjour {{ user.get_full_name|default:user.username }} ! Vous êtes connecté en tant que {{ user.role|lower }}.</p>
+                <a href="{% url 'accueil' %}" class="btn btn-success btn-lg">Continuer</a>
+            {% else %}
+                <div class="mt-4">
+                    <a href="{% url 'accounts:inscription' %}" class="btn btn-outline-success me-3">S'inscrire</a>
+                    <a href="{% url 'accounts:connexion' %}" class="btn btn-success">Se connecter</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
