@@ -49,3 +49,10 @@ def connexion(request):
     #    'user_role': request.user.role if request.user.is_authenticated else None
     #}
     #return render(request, 'accueil.html', context)
+
+
+
+from django.shortcuts import render
+
+def accueil(request):
+    return render(request, 'accueil.html', {})  # template simple à créer
