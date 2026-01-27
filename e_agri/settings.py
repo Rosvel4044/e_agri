@@ -146,14 +146,7 @@ LOGIN_URL = '/agri_market/login/'
 # Type de stockage des messages (session est le plus courant)
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
-# Optionnel : style des messages (bootstrap classes)
-MESSAGE_TAGS = {
-    messages.DEBUG: 'alert-secondary',
-    messages.INFO: 'alert-info',
-    messages.SUCCESS: 'alert-success',
-    messages.WARNING: 'alert-warning',
-    messages.ERROR: 'alert-danger',
-}
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
