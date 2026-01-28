@@ -79,20 +79,14 @@ WSGI_APPLICATION = 'e_agri.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'agri',
-#         'USER': 'postgres',
-#         'PASSWORD': 'Rosvel2004',
-#         'HOST': 'localhost',
-#         'PORT': '5434',
-#     }
-# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'test.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'agri',
+        'USER': 'postgres',
+        'PASSWORD': 'Rosvel2004',
+        'HOST': '127.0.0.1',
+        'PORT': '5434',
     }
 }
 
