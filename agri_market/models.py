@@ -15,42 +15,42 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db import models
 
+from django.db import models
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 
-class Utilisateur(AbstractUser):
+class UtilisateurManager(BaseUserManager):
+    def create_user(self, email, nom, prenom, mot_de_passe=None, role='CLIENT', **extra_fields):
+        if not email:
+            raise ValueError("L'email est obligatoire")
+        email = self.normalize_email(email)
+        user = self.model(email=email, nom=nom, prenom=prenom, role=role, **extra_fields)
+        user.set_password(mot_de_passe)
+        user.save(using=self._db)
+        return user
+class Utilisateur(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = (
-        ('VENDEUR', 'Vendeur'),
         ('CLIENT', 'Client'),
+        ('VENDEUR', 'Vendeur'),
+        ('ADMIN', 'Administrateur'),
     )
-
-    # Champs d'identité
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
-
+    nom = models.CharField(max_length=100)
+    prenom = models.CharField(max_length=100)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
-    telephone = models.CharField(max_length=20, blank=True, null=True)
+    nom_boutique = models.CharField(max_length=150, blank=True, null=True)
+    
+    # Champs requis pour Django Admin
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    
+    objects = UtilisateurManager()
+    
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['nom', 'prenom']
 
-    # Spécifique vendeur
-    nom_boutique = models.CharField(
-        max_length=150,
-        blank=True,
-        null=True
-    )
+    def __str__(self):
+        return f"{self.nom} {self.prenom} ({self.email})"
 
-    # ✅ FIX DU PROBLÈME
-    groups = models.ManyToManyField(
-        Group,
-        related_name='agri_market_users',
-        blank=True
-    )
-
-    user_permissions = models.ManyToManyField(
-        Permission,
-        related_name='agri_market_users_permissions',
-        blank=True
-    )
-
-    REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
 
     def save(self, *args, **kwargs):
         if self.role != 'VENDEUR':
