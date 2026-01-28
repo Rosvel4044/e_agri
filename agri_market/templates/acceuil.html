@@ -1,10 +1,160 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}Accueil | E-Agriculture{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* HERO SECTION */
+    .hero {
+        background: linear-gradient(
+            rgba(46, 125, 50, 0.85),
+            rgba(27, 94, 32, 0.85)
+        ),
+        url("https://images.unsplash.com/photo-1501004318641-b39e6451bec6") center/cover no-repeat;
+        color: white;
+        padding: 6rem 1rem;
+        border-radius: 18px;
+        margin-bottom: 4rem;
+    }
+
+    .hero h1 {
+        font-size: 2.8rem;
+        font-weight: 700;
+    }
+
+    .hero p {
+        font-size: 1.2rem;
+        opacity: 0.95;
+    }
+
+    /* FEATURES */
+    .feature-icon {
+        font-size: 2.5rem;
+        color: var(--primary);
+        margin-bottom: 1rem;
+    }
+
+    .feature-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+
+    /* CTA */
+    .cta {
+        background: var(--primary);
+        color: white;
+        padding: 3rem 1.5rem;
+        border-radius: 16px;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container py-5 text-center">
-    <h1 class="display-4 text-success">Bienvenue sur E-Agriculture</h1>
-    <p class="lead">La plateforme de vente directe des produits agricoles</p>
-</div>
+
+<!-- HERO -->
+<section class="hero text-center">
+    <div class="container">
+        <h1>Bienvenue sur E-Agriculture 🌱</h1>
+        <p class="mt-3 mb-4">
+            Achetez directement auprès des producteurs locaux.  
+            Frais, équitable et 100% camerounais.
+        </p>
+
+        {% if not user.is_authenticated %}
+            <a href="{% url 'agri_market:inscription' %}" class="btn btn-light btn-lg me-2">
+                <i class="fas fa-user-plus me-1"></i> S'inscrire
+            </a>
+            <a href="{% url 'agri_market:connexion' %}" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-sign-in-alt me-1"></i> Connexion
+            </a>
+        {% else %}
+            <a href="#" class="btn btn-light btn-lg">
+                <i class="fas fa-store me-1"></i> Voir les produits
+            </a>
+        {% endif %}
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="container mb-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">Pourquoi choisir E-Agriculture ?</h2>
+        <p class="text-muted">Une plateforme pensée pour producteurs et consommateurs</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card feature-card text-center p-4 h-100">
+                <div class="feature-icon">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <h5 class="fw-bold">Produits frais</h5>
+                <p class="text-muted">
+                    Directement du champ à votre table, sans intermédiaires.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card feature-card text-center p-4 h-100">
+                <div class="feature-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h5 class="fw-bold">Commerce équitable</h5>
+                <p class="text-muted">
+                    Les producteurs fixent leurs prix et sont mieux rémunérés.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card feature-card text-center p-4 h-100">
+                <div class="feature-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <h5 class="fw-bold">Livraison locale</h5>
+                <p class="text-muted">
+                    Des circuits courts pour soutenir l’économie locale.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta text-center">
+    <h2 class="fw-bold mb-3">Prêt à rejoindre la révolution agricole ?</h2>
+    <p class="mb-4">
+        Inscrivez-vous et commencez à acheter ou vendre dès aujourd’hui.
+    </p>
+
+    {% if not user.is_authenticated %}
+        <a href="{% url 'agri_market:inscription' %}" class="btn btn-light btn-lg">
+            Commencer maintenant 🚀
+        </a>
+    {% endif %}
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Animation douce au scroll
+    const cards = document.querySelectorAll('.feature-card');
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate__animated', 'animate__fadeInUp');
+            }
+        });
+    }, { threshold: 0.2 });
+
+    cards.forEach(card => observer.observe(card));
+</script>
 {% endblock %}
