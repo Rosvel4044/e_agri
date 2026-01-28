@@ -48,6 +48,6 @@ def acceuil(request):
     context = {
         'user_role': request.user.role if request.user.is_authenticated else None
     }
-    return render(request, 'agri_market:acceuil.html', context)
+    return render(request, 'acceuil.html', context)
 
 
