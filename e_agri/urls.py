@@ -23,7 +23,7 @@ urlpatterns = [
     #path('contact',contact,name="contact"),
     #path('profile',profile,name="profil"),
     path('agri_market/', include('agri_market.urls')),
-    parths('produits/', include('produits.urls'))
+    path('produits/', include('produits.urls')),
     #path('', views.accueil, name='accueil'),
     path('admin/', admin.site.urls),
 ]
