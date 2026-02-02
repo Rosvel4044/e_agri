@@ -1,0 +1,103 @@
+{% extends 'agri_market/base.html' %}
+
+{% block title %}Catalogue de produits - e_agri{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- En-tête -->
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <h1 class="display-5 fw-bold text-success">🌾 Nos Produits Agricoles</h1>
+            <p class="lead text-muted">Découvrez des produits frais directement des producteurs</p>
+        </div>
+    </div>
+    
+    <!-- Barre de recherche et filtres -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <form method="GET" class="row g-3">
+                <div class="col-md-6">
+                    <input type="text" name="recherche" class="form-control" 
+                           placeholder="Rechercher un produit..." 
+                           value="{{ terme_recherche }}">
+                </div>
+                
+                <div class="col-md-4">
+                    <select name="categorie" class="form-select">
+                        <option value="">Toutes les catégories</option>
+                        {% for categorie in categories %}
+                            <option value="{{ categorie.id }}" 
+                                    {% if categorie.id|stringformat:"s" == categorie_selectionnee %}selected{% endif %}>
+                                {{ categorie.nom }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        🔍 Rechercher
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Liste des produits -->
+    <div class="row">
+        {% if produits %}
+            {% for produit in produits %}
+                <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title mb-0">{{ produit.nom }}</h5>
+                                <span class="badge bg-success">{{ produit.categorie.nom }}</span>
+                            </div>
+                            
+                            <p class="card-text text-muted small">
+                                {{ produit.description|truncatewords:15 }}
+                            </p>
+                            
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="h4 text-success mb-0">{{ produit.prix }} FCFA</span>
+                                    <small class="text-muted">Stock: {{ produit.quantite }}</small>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'detail_produit' produit.id %}" 
+                                   class="btn btn-sm btn-outline-primary flex-grow-1">
+                                    Voir détails
+                                </a>
+                                
+                                {% if produit.quantite > 0 %}
+                                    <button class="btn btn-sm btn-success">
+                                        🛒
+                                    </button>
+                                {% else %}
+                                    <button class="btn btn-sm btn-secondary" disabled>
+                                        Rupture
+                                    </button>
+                                {% endif %}
+                            </div>
+                            
+                            <small class="text-muted d-block mt-2">
+                                Vendeur: {{ produit.vendeur.nom_boutique|default:produit.vendeur.username }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <h5>Aucun produit trouvé</h5>
+                    <p>Essayez de modifier vos critères de recherche</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

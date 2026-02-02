@@ -1,0 +1,113 @@
+{% extends 'agri_market/base.html' %}
+
+{% block title %}Inscription - e_agri{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="card shadow-lg">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold">🌱 Créer un compte</h2>
+                        <p class="text-muted">Rejoignez la communauté e_agri</p>
+                    </div>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="first_name" class="form-label">Prénom <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="first_name" 
+                                       name="first_name" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="last_name" class="form-label">Nom <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="last_name" 
+                                       name="last_name" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Nom d'utilisateur <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="username" 
+                                   name="username" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="email" 
+                                   name="email" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="telephone" class="form-label">Téléphone</label>
+                            <input type="tel" class="form-control" id="telephone" 
+                                   name="telephone" placeholder="+237 6XX XXX XXX">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="role" class="form-label">Je suis <span class="text-danger">*</span></label>
+                            <select class="form-select" id="role" name="role" required onchange="toggleBoutique()">
+                                <option value="">Sélectionnez...</option>
+                                <option value="CLIENT">Client (Acheteur)</option>
+                                <option value="VENDEUR">Vendeur (Producteur)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3" id="boutiqueDiv" style="display: none;">
+                            <label for="nom_boutique" class="form-label">Nom de votre boutique/ferme</label>
+                            <input type="text" class="form-control" id="nom_boutique" 
+                                   name="nom_boutique" placeholder="Ex: Ferme Bio Martin">
+                            <small class="text-muted">Requis pour les vendeurs</small>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="password1" class="form-label">Mot de passe <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control" id="password1" 
+                                       name="password1" required minlength="8">
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="password2" class="form-label">Confirmer <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control" id="password2" 
+                                       name="password2" required minlength="8">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success btn-lg w-100 mb-3">
+                            Créer mon compte
+                        </button>
+                        
+                        <div class="text-center">
+                            <small class="text-muted">
+                                Déjà un compte ? 
+                                <a href="{% url 'connexion' %}" class="text-success">Se connecter</a>
+                            </small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleBoutique() {
+    const role = document.getElementById('role').value;
+    const boutiqueDiv = document.getElementById('boutiqueDiv');
+    const boutiqueInput = document.getElementById('nom_boutique');
+    
+    if (role === 'VENDEUR') {
+        boutiqueDiv.style.display = 'block';
+        boutiqueInput.required = true;
+    } else {
+        boutiqueDiv.style.display = 'none';
+        boutiqueInput.required = false;
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,139 @@
+<!doctype html>
+{% extends 'agri_market/base.html' %}
+{% load custom_filters %}
+
+{% block title %}Valider ma commande - e_agri{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="h2 mb-4">✅ Validation de la commande</h1>
+            
+            <!-- Récapitulatif des vendeurs -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">📦 Récapitulatif de votre commande</h5>
+                </div>
+                <div class="card-body">
+                    {% for vendeur_data in vendeurs %}
+                        <div class="mb-3 pb-3 {% if not forloop.last %}border-bottom{% endif %}">
+                            <h6 class="text-success">
+                                🌱 {{ vendeur_data.vendeur.nom_boutique }}
+                            </h6>
+                            <p class="mb-2 small text-muted">
+                                Contact: {{ vendeur_data.vendeur.first_name }} {{ vendeur_data.vendeur.last_name }}
+                                {% if vendeur_data.vendeur.telephone %}
+                                    | 📞 {{ vendeur_data.vendeur.telephone }}
+                                {% endif %}
+                            </p>
+                            <ul class="list-unstyled mb-2">
+                                {% for ligne in vendeur_data.lignes %}
+                                    <li>
+                                        • {{ ligne.produit.nom }} x{{ ligne.quantite }} 
+                                        = <strong>{{ ligne.prix_unitaire|multiply:ligne.quantite|floatformat:0 }} FCFA</strong>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <div class="text-end">
+                                Sous-total: <strong>{{ vendeur_data.sous_total }} FCFA</strong>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                        <h5 class="mb-0">Total général:</h5>
+                        <h4 class="mb-0 text-success">{{ montant_total }} FCFA</h4>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Formulaire de validation -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">📍 Informations de livraison</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Mode de récupération <span class="text-danger">*</span></label>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="mode_retrait" 
+                                       id="livraison" value="LIVRAISON" checked 
+                                       onchange="toggleAdresse()">
+                                <label class="form-check-label" for="livraison">
+                                    <strong>🚚 Livraison à domicile</strong>
+                                    <p class="text-muted small mb-0">
+                                        Le vendeur vous contactera pour organiser la livraison
+                                    </p>
+                                </label>
+                            </div>
+                            
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="mode_retrait" 
+                                       id="sur_place" value="SUR_PLACE"
+                                       onchange="toggleAdresse()">
+                                <label class="form-check-label" for="sur_place">
+                                    <strong>🏪 Retrait sur place</strong>
+                                    <p class="text-muted small mb-0">
+                                        Vous irez récupérer directement chez le vendeur
+                                    </p>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4" id="adresseDiv">
+                            <label for="adresse_livraison" class="form-label">
+                                Adresse de livraison <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control" id="adresse_livraison" 
+                                      name="adresse_livraison" rows="3" required
+                                      placeholder="Entrez votre adresse complète (quartier, rue, repères...)"></textarea>
+                            <small class="text-muted">
+                                Soyez précis pour faciliter la livraison
+                            </small>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <h6 class="alert-heading">ℹ️ Important</h6>
+                            <ul class="mb-0 small">
+                                <li>Une notification sera envoyée à chaque vendeur concerné</li>
+                                <li>Les vendeurs vous contacteront pour finaliser les détails</li>
+                                <li>Vous recevrez également un récapitulatif de votre commande</li>
+                                <li>Le paiement se fera directement avec le vendeur</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'voir_panier' %}" class="btn btn-secondary">
+                                ← Retour au panier
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                ✅ Confirmer la commande
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleAdresse() {
+    const adresseDiv = document.getElementById('adresseDiv');
+    const adresseInput = document.getElementById('adresse_livraison');
+    const livraison = document.getElementById('livraison').checked;
+    
+    if (livraison) {
+        adresseDiv.style.display = 'block';
+        adresseInput.required = true;
+    } else {
+        adresseDiv.style.display = 'none';
+        adresseInput.required = false;
+    }
+}
+</script>
+{% endblock %}

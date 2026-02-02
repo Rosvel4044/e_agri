@@ -1,0 +1,202 @@
+{% extends 'agri_market/base.html' %}
+
+{% block title %}Accueil - e_agri{% endblock %}
+
+{% block content %}
+<!-- Section Hero -->
+<div class="bg-success text-white py-5" style="background: linear-gradient(135deg, #2d5016 0%, #6ba539 100%);">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-3 fw-bold mb-4">🌱 Bienvenue sur e_agri</h1>
+                <p class="lead mb-4">
+                    La plateforme qui met en relation producteurs agricoles et consommateurs 
+                    pour des produits frais, locaux et de qualité.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="/produits/" class="btn btn-light btn-lg">
+                        🛒 Découvrir les produits
+                    </a>
+                    {% if not user.is_authenticated %}
+                        <a href="/admin/login/" class="btn btn-outline-light btn-lg">
+                            👤 Se connecter
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div style="font-size: 150px;">
+                    🌾
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section Avantages -->
+<div class="container py-5">
+    <h2 class="text-center mb-5 fw-bold">Pourquoi choisir e_agri ?</h2>
+    
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 text-center border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div style="font-size: 60px;" class="mb-3">🌿</div>
+                    <h4 class="card-title">Produits Frais</h4>
+                    <p class="card-text text-muted">
+                        Des produits agricoles fraîchement récoltés, 
+                        directement des producteurs locaux.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100 text-center border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div style="font-size: 60px;" class="mb-3">🤝</div>
+                    <h4 class="card-title">Circuit Court</h4>
+                    <p class="card-text text-muted">
+                        Achetez directement aux producteurs sans intermédiaires, 
+                        pour des prix justes.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100 text-center border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div style="font-size: 60px;" class="mb-3">🚀</div>
+                    <h4 class="card-title">Simple et Rapide</h4>
+                    <p class="card-text text-muted">
+                        Une plateforme facile à utiliser pour commander 
+                        vos produits en quelques clics.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section Catégories -->
+<div class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center mb-5 fw-bold">Nos Catégories de Produits</h2>
+        
+        <div class="row g-4">
+            <div class="col-6 col-md-3">
+                <a href="/produits/" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm hover-card">
+                        <div class="card-body text-center p-4">
+                            <div style="font-size: 50px;" class="mb-2">🥬</div>
+                            <h5 class="mb-0">Légumes</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="col-6 col-md-3">
+                <a href="/produits/" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm hover-card">
+                        <div class="card-body text-center p-4">
+                            <div style="font-size: 50px;" class="mb-2">🍎</div>
+                            <h5 class="mb-0">Fruits</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="col-6 col-md-3">
+                <a href="/produits/" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm hover-card">
+                        <div class="card-body text-center p-4">
+                            <div style="font-size: 50px;" class="mb-2">🌾</div>
+                            <h5 class="mb-0">Céréales</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="col-6 col-md-3">
+                <a href="/produits/" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm hover-card">
+                        <div class="card-body text-center p-4">
+                            <div style="font-size: 50px;" class="mb-2">🥔</div>
+                            <h5 class="mb-0">Tubercules</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="/produits/" class="btn btn-success btn-lg">
+                Voir tous les produits →
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Section Appel à l'action Vendeurs -->
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-success shadow-lg">
+                <div class="card-body text-center p-5">
+                    <h2 class="fw-bold mb-3">Vous êtes producteur ?</h2>
+                    <p class="lead text-muted mb-4">
+                        Rejoignez notre plateforme et vendez vos produits directement 
+                        à des milliers de clients potentiels.
+                    </p>
+                    <div class="d-flex justify-content-center gap-3">
+                        {% if user.is_authenticated and user.role == 'VENDEUR' %}
+                            <a href="/vendeur/mes-produits/" class="btn btn-success btn-lg">
+                                📦 Gérer mes produits
+                            </a>
+                        {% else %}
+                            <a href="/admin/login/" class="btn btn-success btn-lg">
+                                🌱 Devenir vendeur
+                            </a>
+                        {% endif %}
+                        <a href="/produits/" class="btn btn-outline-success btn-lg">
+                            📖 En savoir plus
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section Statistiques -->
+<div class="bg-success text-white py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4">
+                <h2 class="display-4 fw-bold">500+</h2>
+                <p class="lead">Produits disponibles</p>
+            </div>
+            <div class="col-md-4">
+                <h2 class="display-4 fw-bold">100+</h2>
+                <p class="lead">Producteurs actifs</p>
+            </div>
+            <div class="col-md-4">
+                <h2 class="display-4 fw-bold">1000+</h2>
+                <p class="lead">Clients satisfaits</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.hover-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2) !important;
+}
+</style>
+{% endblock %}

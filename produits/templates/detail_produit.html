@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+{% load custom_filters %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ produit.nom }} - e_agri</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation simple -->
+    <nav class="navbar navbar-dark bg-success">
+        <div class="container">
+            <a class="navbar-brand" href="/">🌱 e_agri</a>
+            <div>
+                <a href="/produits/" class="btn btn-sm btn-light">← Retour aux produits</a>
+                {% if user.is_authenticated and user.role == 'CLIENT' %}
+                    <a href="/panier/" class="btn btn-sm btn-warning">🛒 Panier</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row">
+            <!-- Colonne principale -->
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h1 class="h2 mb-3">{{ produit.nom }}</h1>
+                        <span class="badge bg-success mb-3">{{ produit.categorie.nom }}</span>
+                        
+                        <hr>
+                        
+                        <h5 class="mb-3">Description</h5>
+                        <p class="text-muted">
+                            {{ produit.description|default:"Aucune description disponible." }}
+                        </p>
+                        
+                        <hr>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Stock disponible</h6>
+                                <p class="lead">
+                                    {% if produit.quantite > 10 %}
+                                        <span class="badge bg-success">{{ produit.quantite }} unités</span>
+                                    {% elif produit.quantite > 0 %}
+                                        <span class="badge bg-warning">{{ produit.quantite }} unités</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Rupture de stock</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h6>Vendeur</h6>
+                                <p class="mb-0">
+                                    <strong>{{ produit.vendeur.nom_boutique|default:produit.vendeur.username }}</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Colonne latérale -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Commander</h5>
+                        <div class="text-center mb-3">
+                            <h2 class="text-success">{{ produit.prix }} FCFA</h2>
+                            <small class="text-muted">Prix unitaire</small>
+                        </div>
+                        
+                        {% if produit.quantite > 0 %}
+                            {% if user.is_authenticated and user.role == 'CLIENT' %}
+                                <form method="POST" action="/panier/ajouter/{{ produit.id }}/">
+                                    {% csrf_token %}
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Quantité</label>
+                                        <input type="number" 
+                                               name="quantite" 
+                                               class="form-control form-control-lg text-center" 
+                                               value="1" 
+                                               min="1" 
+                                               max="{{ produit.quantite }}" 
+                                               required>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-success btn-lg w-100 mb-2">
+                                        🛒 Ajouter au panier
+                                    </button>
+                                </form>
+                            {% elif not user.is_authenticated %}
+                                <a href="/connexion/" class="btn btn-success btn-lg w-100 mb-2">
+                                    Se connecter pour commander
+                                </a>
+                            {% else %}
+                                <div class="alert alert-warning">
+                                    Seuls les clients peuvent commander
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <div class="alert alert-danger">
+                                <strong>Rupture de stock</strong>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

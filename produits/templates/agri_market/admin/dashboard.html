@@ -1,0 +1,308 @@
+{% extends 'agri_market/base.html' %}
+
+{% block title %}Dashboard Administrateur - e_agri{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h2 mb-0">📊 Dashboard Administrateur</h1>
+            <p class="text-muted">Vue d'ensemble de la plateforme</p>
+        </div>
+    </div>
+
+    <!-- Statistiques principales -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Total Utilisateurs</h6>
+                            <h2 class="mb-0">{{ stats.total_users }}</h2>
+                        </div>
+                        <div class="fs-1">👥</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Vendeurs</h6>
+                            <h2 class="mb-0 text-success">{{ stats.total_vendeurs }}</h2>
+                        </div>
+                        <div class="fs-1">🌱</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Clients</h6>
+                            <h2 class="mb-0 text-primary">{{ stats.total_clients }}</h2>
+                        </div>
+                        <div class="fs-1">🛒</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Produits</h6>
+                            <h2 class="mb-0 text-warning">{{ stats.total_produits }}</h2>
+                        </div>
+                        <div class="fs-1">📦</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Commandes Total</h6>
+                            <h2 class="mb-0">{{ stats.total_commandes }}</h2>
+                        </div>
+                        <div class="fs-1">📋</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm bg-warning bg-opacity-10">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">En attente</h6>
+                            <h2 class="mb-0 text-warning">{{ stats.commandes_attente }}</h2>
+                        </div>
+                        <div class="fs-1">⏳</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm bg-success bg-opacity-10">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Payées</h6>
+                            <h2 class="mb-0 text-success">{{ stats.commandes_payees }}</h2>
+                        </div>
+                        <div class="fs-1">✅</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm bg-primary bg-opacity-10">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Livrées</h6>
+                            <h2 class="mb-0 text-primary">{{ stats.commandes_livrees }}</h2>
+                        </div>
+                        <div class="fs-1">🚚</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onglets -->
+    <ul class="nav nav-tabs mb-4" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#vendeurs">
+                Vendeurs ({{ vendeurs.count }})
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#clients">
+                Clients ({{ clients.count }})
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#commandes">
+                Commandes récentes
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <!-- Onglet Vendeurs -->
+        <div class="tab-pane fade show active" id="vendeurs">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nom complet</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Boutique</th>
+                                    <th>Téléphone</th>
+                                    <th>Produits</th>
+                                    <th>Date d'inscription</th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for vendeur in vendeurs %}
+                                <tr>
+                                    <td>{{ vendeur.id }}</td>
+                                    <td>{{ vendeur.first_name }} {{ vendeur.last_name }}</td>
+                                    <td>{{ vendeur.username }}</td>
+                                    <td>{{ vendeur.email }}</td>
+                                    <td>
+                                        <strong>{{ vendeur.nom_boutique }}</strong>
+                                    </td>
+                                    <td>{{ vendeur.telephone|default:"N/A" }}</td>
+                                    <td>
+                                        <span class="badge bg-success">{{ vendeur.produits.count }}</span>
+                                    </td>
+                                    <td>{{ vendeur.date_joined|date:"d/m/Y" }}</td>
+                                    <td>
+                                        {% if vendeur.is_active %}
+                                            <span class="badge bg-success">Actif</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Inactif</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="9" class="text-center text-muted">Aucun vendeur inscrit</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Onglet Clients -->
+        <div class="tab-pane fade" id="clients">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nom complet</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Téléphone</th>
+                                    <th>Commandes</th>
+                                    <th>Date d'inscription</th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for client in clients %}
+                                <tr>
+                                    <td>{{ client.id }}</td>
+                                    <td>{{ client.first_name }} {{ client.last_name }}</td>
+                                    <td>{{ client.username }}</td>
+                                    <td>{{ client.email }}</td>
+                                    <td>{{ client.telephone|default:"N/A" }}</td>
+                                    <td>
+                                        <span class="badge bg-primary">{{ client.commandes.count }}</span>
+                                    </td>
+                                    <td>{{ client.date_joined|date:"d/m/Y" }}</td>
+                                    <td>
+                                        {% if client.is_active %}
+                                            <span class="badge bg-success">Actif</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Inactif</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="8" class="text-center text-muted">Aucun client inscrit</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Onglet Commandes -->
+        <div class="tab-pane fade" id="commandes">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>N° Commande</th>
+                                    <th>Client</th>
+                                    <th>Montant</th>
+                                    <th>Articles</th>
+                                    <th>Statut</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for commande in commandes_recentes %}
+                                <tr>
+                                    <td><strong>#{{ commande.id }}</strong></td>
+                                    <td>{{ commande.client.first_name }} {{ commande.client.last_name }}</td>
+                                    <td class="text-success fw-bold">{{ commande.montant_total }} FCFA</td>
+                                    <td>{{ commande.lignes.count }} article(s)</td>
+                                    <td>
+                                        {% if commande.statut == 'PANIER' %}
+                                            <span class="badge bg-secondary">Panier</span>
+                                        {% elif commande.statut == 'EN_ATTENTE' %}
+                                            <span class="badge bg-warning">En attente</span>
+                                        {% elif commande.statut == 'PAYEE' %}
+                                            <span class="badge bg-success">Payée</span>
+                                        {% elif commande.statut == 'EXPEDIEE' %}
+                                            <span class="badge bg-info">Expédiée</span>
+                                        {% elif commande.statut == 'LIVREE' %}
+                                            <span class="badge bg-primary">Livrée</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Annulée</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ commande.date_commande|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">Aucune commande</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

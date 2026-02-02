@@ -1,0 +1,4 @@
+/* agri_market/static/agri_market/css/styles.css */
+body { font-family: Arial, sans-serif; background-color: #f8f9fa; }
+.product-card { border: 1px solid #ddd; padding: 15px; margin: 10px; }
+.btn-add-to-cart { background-color: #28a745; color: white; }

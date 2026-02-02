@@ -1,0 +1,149 @@
+{% extends 'agri_market/base.html' %}
+{% load custom_filters %}
+
+{% block title %}{{ produit.nom }} - e_agri{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'liste_produits' %}">Produits</a></li>
+            <li class="breadcrumb-item active">{{ produit.nom }}</li>
+        </ol>
+    </nav>
+    
+    <div class="row">
+        <!-- Colonne principale : Détails produit -->
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h1 class="h2 mb-2">{{ produit.nom }}</h1>
+                            <span class="badge bg-success">{{ produit.categorie.nom }}</span>
+                        </div>
+                        <div class="text-end">
+                            <div class="h2 text-success mb-0">{{ produit.prix }} FCFA</div>
+                            <small class="text-muted">Prix unitaire</small>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h5 class="mb-3">Description</h5>
+                    <p class="text-muted">
+                        {{ produit.description|default:"Aucune description disponible." }}
+                    </p>
+                    
+                    <hr>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Stock disponible</h6>
+                            <p class="lead">
+                                {% if produit.quantite > 10 %}
+                                    <span class="badge bg-success">{{ produit.quantite }} unités</span>
+                                {% elif produit.quantite > 0 %}
+                                    <span class="badge bg-warning">{{ produit.quantite }} unités (stock limité)</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Rupture de stock</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h6>Vendeur</h6>
+                            <p class="mb-0">
+                                <strong>{{ produit.vendeur.nom_boutique|default:produit.vendeur.username }}</strong>
+                            </p>
+                            {% if produit.vendeur.telephone %}
+                                <small class="text-muted">📞 {{ produit.vendeur.telephone }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <small class="text-muted">
+                        Ajouté le {{ produit.date_ajout|date:"d/m/Y à H:i" }}
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Colonne latérale : Action d'achat -->
+        <div class="col-lg-4">
+            <div class="card sticky-top" style="top: 20px;">
+                <div class="card-body">
+                    <h5 class="card-title">Commander ce produit</h5>
+                    
+                    {% if produit.quantite > 0 %}
+                        {% if user.is_authenticated and user.role == 'CLIENT' %}
+                            <form method="POST" action="{% url 'ajouter_au_panier' produit.id %}">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label class="form-label">Quantité</label>
+                                    <input type="number" name="quantite" class="form-control" 
+                                           value="1" min="1" max="{{ produit.quantite }}" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Prix unitaire:</span>
+                                        <strong>{{ produit.prix }} FCFA</strong>
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-success w-100 mb-2">
+                                    🛒 Ajouter au panier
+                                </button>
+                            </form>
+                        {% elif user.is_authenticated %}
+                            <div class="alert alert-warning">
+                                Seuls les clients peuvent commander
+                            </div>
+                        {% else %}
+                            <a href="{% url 'connexion' %}" class="btn btn-success w-100 mb-2">
+                                Se connecter pour commander
+                            </a>
+                        {% endif %}
+                        
+                        <button type="button" class="btn btn-outline-primary w-100">
+                            💬 Contacter le vendeur
+                        </button>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            <strong>Rupture de stock</strong>
+                            <p class="mb-0 small">Ce produit n'est plus disponible pour le moment.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Produits similaires -->
+    {% if produits_similaires %}
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="mb-4">Produits similaires</h3>
+            </div>
+            
+            {% for produit_sim in produits_similaires %}
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h6 class="card-title">{{ produit_sim.nom }}</h6>
+                            <p class="text-success fw-bold">{{ produit_sim.prix }} FCFA</p>
+                            <a href="{% url 'detail_produit' produit_sim.id %}" 
+                               class="btn btn-sm btn-outline-primary">
+                                Voir détails
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
