@@ -32,7 +32,7 @@ urlpatterns = [
     
     
     # URLs publiques
-    path('liste', views.liste_produits, name='liste_produit'),
+    path('liste', views.liste_produits, name='liste_produits'),
     path('produit/<int:produit_id>/', views.detail_produit, name='detail_produit'),
     
         # URLs client - Panier
