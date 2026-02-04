@@ -105,7 +105,7 @@ def connexion(request):
         else:
             messages.error(request, "Nom d'utilisateur ou mot de passe incorrect")
     
-    return render(request, 'login.html')
+    return render(request, 'connexion.html')
 
 
 def deconnexion(request):
