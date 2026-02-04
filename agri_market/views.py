@@ -78,7 +78,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 def home(request):
     """Page d'accueil du site"""
-    return render(request, 'agri_market/home.html')
+    return render(request, 'home.html')
 
 
 # =========================
