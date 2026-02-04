@@ -196,7 +196,7 @@ def liste_produits(request):
         'categorie_selectionnee': categorie_id
     }
     
-    return render(request, 'agri_market/produits/liste.html', context)
+    return render(request, 'liste.html', context)
 
 
 def detail_produit(request, produit_id):
@@ -243,7 +243,7 @@ def mes_produits(request):
         'produits': produits
     }
     
-    return render(request, 'agri_market/vendeur/mes_produits.html', context)
+    return render(request, 'mes_produits.html', context)
 
 
 @login_required
