@@ -105,7 +105,7 @@ def connexion(request):
         else:
             messages.error(request, "Nom d'utilisateur ou mot de passe incorrect")
     
-    return render(request, 'agri_market/auth/login.html')
+    return render(request, 'agri_3login.html')
 
 
 def deconnexion(request):
@@ -133,19 +133,19 @@ def inscription(request):
             # Validations
             if password1 != password2:
                 messages.error(request, "Les mots de passe ne correspondent pas")
-                return render(request, 'agri_market/auth/inscription.html')
+                return render(request, 'inscription.html')
             
             if Utilisateur.objects.filter(username=username).exists():
                 messages.error(request, "Ce nom d'utilisateur existe déjà")
-                return render(request, 'agri_market/auth/inscription.html')
+                return render(request, 'inscription.html')
             
             if Utilisateur.objects.filter(email=email).exists():
                 messages.error(request, "Cet email est déjà utilisé")
-                return render(request, 'agri_market/auth/inscription.html')
+                return render(request, 'inscription.html')
             
             if role == 'VENDEUR' and not nom_boutique:
                 messages.error(request, "Le nom de la boutique est obligatoire pour les vendeurs")
-                return render(request, 'agri_market/auth/inscription.html')
+                return render(request, 'inscription.html')
             
             # Créer l'utilisateur
             user = Utilisateur.objects.create_user(
@@ -165,7 +165,7 @@ def inscription(request):
         except Exception as e:
             messages.error(request, f"Erreur lors de la création du compte : {str(e)}")
     
-    return render(request, 'agri_market/auth/inscription.html')
+    return render(request, 'inscription.html')
 
 
 # =========================
