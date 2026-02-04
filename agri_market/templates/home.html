@@ -14,7 +14,7 @@
                     pour des produits frais, locaux et de qualité.
                 </p>
                 <div class="d-flex gap-3">
-                    <a href="/produits/" class="btn btn-light btn-lg">
+                    <a href="{% url 'agri_market:liste_produits' %}" class="text-success btn-lg">
                         🛒 Découvrir les produits
                     </a>
                     {% if not user.is_authenticated %}
