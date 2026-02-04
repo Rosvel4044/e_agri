@@ -216,7 +216,7 @@ def detail_produit(request, produit_id):
             'produits_similaires': produits_similaires
         }
         
-        return render(request, 'agri_market/produits/detail.html', context)
+        return render(request, 'detail.html', context)
         
     except ValidationError as e:
         messages.error(request, str(e))
