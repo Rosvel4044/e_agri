@@ -1,0 +1,148 @@
+<!doctype html>
+{% extends 'agri_market/base.html' %}
+{% load custom_filters %}
+
+{% block title %}Mon Panier - e_agri{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2">🛒 Mon Panier</h1>
+        <div>
+            <a href="{% url 'liste_produits' %}" class="btn btn-outline-primary me-2">
+                ← Continuer mes achats
+            </a>
+            <a href="{% url 'mes_commandes' %}" class="btn btn-outline-secondary">
+                📋 Mes commandes
+            </a>
+        </div>
+    </div>
+    
+    {% if lignes %}
+        <div class="row">
+            <!-- Liste des articles -->
+            <div class="col-lg-8">
+                {% for vendeur_data in vendeurs %}
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">
+                                🌱 {{ vendeur_data.vendeur.nom_boutique }}
+                                <small class="text-muted">({{ vendeur_data.vendeur.first_name }})</small>
+                            </h5>
+                            {% if vendeur_data.vendeur.telephone %}
+                                <small class="text-muted">📞 {{ vendeur_data.vendeur.telephone }}</small>
+                            {% endif %}
+                        </div>
+                        <div class="card-body p-0">
+                            {% for ligne in vendeur_data.lignes %}
+                                <div class="d-flex align-items-center p-3 border-bottom">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">{{ ligne.produit.nom }}</h6>
+                                        <p class="text-muted small mb-0">{{ ligne.prix_unitaire }} FCFA/unité</p>
+                                    </div>
+                                    
+                                    <div class="d-flex align-items-center gap-3">
+                                        <form method="POST" action="{% url 'modifier_quantite_panier' ligne.id %}" class="d-flex align-items-center gap-2">
+                                            {% csrf_token %}
+                                            <button type="submit" name="quantite" value="{{ ligne.quantite|add:'-1' }}" 
+                                                    class="btn btn-sm btn-outline-secondary" 
+                                                    {% if ligne.quantite <= 1 %}disabled{% endif %}>
+                                                -
+                                            </button>
+                                            <input type="number" name="quantite_display" value="{{ ligne.quantite }}" 
+                                                   class="form-control form-control-sm text-center" 
+                                                   style="width: 60px;" readonly>
+                                            <button type="submit" name="quantite" value="{{ ligne.quantite|add:'1' }}" 
+                                                    class="btn btn-sm btn-outline-secondary"
+                                                    {% if ligne.quantite >= ligne.produit.quantite %}disabled{% endif %}>
+                                                +
+                                            </button>
+                                        </form>
+                                        
+                                        <div class="text-end" style="min-width: 100px;">
+                                            <strong>{{ ligne.prix_unitaire|multiply:ligne.quantite|floatformat:0 }} FCFA</strong>
+                                        </div>
+                                        
+                                        <form method="POST" action="{% url 'retirer_du_panier' ligne.id %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                🗑️
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="p-3 bg-light">
+                                <div class="d-flex justify-content-between">
+                                    <span>Sous-total {{ vendeur_data.vendeur.nom_boutique }}:</span>
+                                    <strong>{{ vendeur_data.sous_total }} FCFA</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Récapitulatif -->
+            <div class="col-lg-4">
+                <div class="card sticky-top" style="top: 20px;">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">Récapitulatif</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Articles:</span>
+                            <strong>{{ nombre_articles }}</strong>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Vendeurs:</span>
+                            <strong>{{ vendeurs|length }}</strong>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between mb-3">
+                            <h5>Total:</h5>
+                            <h5 class="text-success">{{ montant_total }} FCFA</h5>
+                        </div>
+                        
+                        <a href="{% url 'valider_commande' %}" class="btn btn-success w-100 mb-2">
+                            ✅ Valider la commande
+                        </a>
+                        
+                        <form method="POST" action="{% url 'vider_panier' %}" onsubmit="return confirm('Vider le panier ?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger w-100">
+                                🗑️ Vider le panier
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="card-footer text-muted small">
+                        <p class="mb-0">
+                            💡 Vous commandez chez {{ vendeurs|length }} vendeur{% if vendeurs|length > 1 %}s{% endif %} différent{% if vendeurs|length > 1 %}s{% endif %}. 
+                            Chaque vendeur sera notifié séparément.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <div style="font-size: 80px;">🛒</div>
+                <h3 class="mt-3">Votre panier est vide</h3>
+                <p class="text-muted">Découvrez nos produits et ajoutez-les à votre panier</p>
+                <a href="{% url 'liste_produits' %}" class="btn btn-success btn-lg mt-3">
+                    Découvrir les produits
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+{% load static %}
+</style>
+{% endblock %}

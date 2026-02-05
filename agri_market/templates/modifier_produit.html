@@ -1,0 +1,129 @@
+{% extends 'agri_market/base.html' %}
+
+{% block title %}Modifier {{ produit.nom }} - e_agri{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'mes_produits' %}">Mes Produits</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'commandes_vendeur' %}">Commandes reçues</a></li>
+                    <li class="breadcrumb-item active">Modifier {{ produit.nom }}</li>
+                </ol>
+            </nav>
+            
+            <div class="card">
+                <div class="card-header bg-warning">
+                    <h4 class="mb-0">✏️ Modifier le produit</h4>
+                </div>
+                
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="nom" class="form-label">Nom du produit <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nom" name="nom" 
+                                   value="{{ produit.nom }}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="categorie" class="form-label">Catégorie <span class="text-danger">*</span></label>
+                            <select class="form-select" id="categorie" name="categorie" required>
+                                {% for categorie in categories %}
+                                    <option value="{{ categorie.id }}" 
+                                            {% if categorie.id == produit.categorie.id %}selected{% endif %}>
+                                        {{ categorie.nom }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="prix" class="form-label">Prix unitaire (FCFA) <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="prix" name="prix" 
+                                           value="{{ produit.prix }}" min="0" step="0.01" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="quantite" class="form-label">Quantité en stock <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="quantite" name="quantite" 
+                                           value="{{ produit.quantite }}" min="0" required>
+                                    <small class="form-text text-muted">
+                                        Stock actuel: {{ produit.quantite }} unité(s)
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4">{{ produit.description }}</textarea>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{% url 'mes_produits' %}" class="btn btn-secondary">
+                                ← Annuler
+                            </a>
+                            
+                            <div>
+                                <button type="button" class="btn btn-danger" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#deleteModal">
+                                    🗑️ Supprimer
+                                </button>
+                                <button type="submit" class="btn btn-success btn-lg ms-2">
+                                    ✅ Enregistrer les modifications
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="card-footer text-muted">
+                    <small>
+                        Dernière modification: {{ produit.date_ajout|date:"d/m/Y à H:i" }}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmation de suppression -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">⚠️ Confirmer la suppression</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer le produit <strong>{{ produit.nom }}</strong> ?</p>
+                <div class="alert alert-danger">
+                    <strong>Attention :</strong> Cette action est irréversible. Toutes les données associées seront perdues.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Annuler
+                </button>
+                <form method="POST" action="{% url 'supprimer_produit' produit.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        Supprimer définitivement
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

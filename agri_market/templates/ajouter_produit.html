@@ -1,0 +1,101 @@
+{% extends 'agri_market/base.html' %}
+
+{% block title %}Ajouter un produit - e_agri{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'mes_produits' %}">Mes Produits</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'commandes_vendeur' %}">Commandes reçues</a></li>
+                    <li class="breadcrumb-item active">Ajouter un produit</li>
+                </ol>
+            </nav>
+            
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">➕ Ajouter un nouveau produit</h4>
+                </div>
+                
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="nom" class="form-label">Nom du produit <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nom" name="nom" required
+                                   placeholder="Ex: Tomates fraîches">
+                            <small class="form-text text-muted">Soyez précis et descriptif</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="categorie" class="form-label">Catégorie <span class="text-danger">*</span></label>
+                            <select class="form-select" id="categorie" name="categorie" required>
+                                <option value="">Sélectionnez une catégorie</option>
+                                {% for categorie in categories %}
+                                    <option value="{{ categorie.id }}">{{ categorie.nom }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="prix" class="form-label">Prix unitaire (FCFA) <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="prix" name="prix" 
+                                           min="0" step="0.01" required
+                                           placeholder="Ex: 500">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="quantite" class="form-label">Quantité en stock <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="quantite" name="quantite" 
+                                           min="0" required
+                                           placeholder="Ex: 100">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" 
+                                      rows="4" placeholder="Décrivez votre produit en détail..."></textarea>
+                            <small class="form-text text-muted">
+                                Mentionnez la qualité, l'origine, les conditions de conservation, etc.
+                            </small>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'mes_produits' %}" class="btn btn-secondary">
+                                ← Annuler
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                ✅ Ajouter le produit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Aide -->
+            <div class="card mt-4 border-info">
+                <div class="card-body">
+                    <h6 class="text-info">💡 Conseils pour un bon produit</h6>
+                    <ul class="mb-0 small">
+                        <li>Utilisez un nom clair et descriptif</li>
+                        <li>Indiquez le prix au kilo, à la pièce, ou au paquet</li>
+                        <li>Mettez à jour le stock régulièrement</li>
+                        <li>Décrivez la qualité et l'origine du produit</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
