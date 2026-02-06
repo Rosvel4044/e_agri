@@ -85,7 +85,7 @@ def home(request):
 # AUTHENTIFICATION
 # =========================
 
-def login(request):
+def connexion(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -107,7 +107,7 @@ def login(request):
         else:
             messages.error(request, "Email ou mot de passe incorrect")
 
-    return render(request, 'login.html')
+    return render(request, 'connnexion.html')
 
 
 def deconnexion(request):
