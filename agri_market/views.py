@@ -86,28 +86,26 @@ def home(request):
 # =========================
 
 def login(request):
-    """Page de connexion"""
     if request.method == 'POST':
-        username = request.POST.get('username')
+        email = request.POST.get('email')
         password = request.POST.get('password')
 
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=email, password=password)
 
         if user is not None:
-            django_login(request, user)
-            messages.success(request, f"Bienvenue {user.first_name or user.username} !")
+            login(request, user)
 
-            # Récupération du next s'il existe
+            # Récupérer next s'il existe
             next_url = request.GET.get('next')
 
-            # 🔐 Redirection selon le rôle
+            # 🔐 Règle métier : redirection selon le rôle
             if user.role == 'VENDEUR':
-                return redirect(next_url if next_url else 'mes_produits')
+                return redirect(next_url if next_url else 'ajouter_produit')
             else:
-                return redirect('liste_produits')
+                return redirect('home')
 
         else:
-            messages.error(request, "Nom d'utilisateur ou mot de passe incorrect")
+            messages.error(request, "Email ou mot de passe incorrect")
 
     return render(request, 'login.html')
 
