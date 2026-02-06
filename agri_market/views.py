@@ -290,7 +290,7 @@ def ajouter_produit(request):
         'categories': categories
     }
     
-    return render(request, 'agri_market/vendeur/ajouter_produit.html', context)
+    return render(request, 'ajouter_produit.html', context)
 
 
 @login_required
