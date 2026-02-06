@@ -242,7 +242,7 @@ def mes_produits(request):
 
 
 #@login_required
-@login_required(login_url='/agri_market/connexion/')
+@login_required(login_url='connexion/')
 def ajouter_produit(request):
     if request.user.role != 'VENDEUR':
         messages.error(request, "Accès réservé aux vendeurs")
@@ -308,7 +308,7 @@ def ajouter_produit(request):
 
 
 #@login_required
-@login_required(login_url='/agri_market/connexion/')
+@login_required(login_url='connexion/')
 def modifier_produit(request, produit_id):
     if request.user.role != 'VENDEUR':
         messages.error(request, "Accès réservé aux vendeurs")
@@ -344,7 +344,7 @@ def modifier_produit(request, produit_id):
     })
 
 #@login_required
-@login_required(login_url='/agri_market/connexion/')
+@login_required(login_url='connexion/')
 #@require_POST
 def supprimer_produit(request, produit_id):
     if request.user.role != 'VENDEUR':
