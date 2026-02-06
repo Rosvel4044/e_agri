@@ -90,21 +90,25 @@ def login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        
+
         user = authenticate(request, username=username, password=password)
-        
+
         if user is not None:
-            login(request, user)
-            messages.success(request, f"Bienvenue {user.first_name} !")
-            
-            # Rediriger selon le rôle
+            django_login(request, user)
+            messages.success(request, f"Bienvenue {user.first_name or user.username} !")
+
+            # Récupération du next s'il existe
+            next_url = request.GET.get('next')
+
+            # 🔐 Redirection selon le rôle
             if user.role == 'VENDEUR':
-                return redirect('mes_produits')
+                return redirect(next_url if next_url else 'mes_produits')
             else:
                 return redirect('liste_produits')
+
         else:
             messages.error(request, "Nom d'utilisateur ou mot de passe incorrect")
-    
+
     return render(request, 'login.html')
 
 
