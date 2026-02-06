@@ -16,8 +16,8 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-LOGIN_URL = '/agri_market/connexion/'
-LOGIN_REDIRECT_URL = '/agri_market/'
+LOGIN_URL = '/agri_market/login/'
+LOGIN_REDIRECT_URL = '/agri_market/ajouter_produit'
 LOGOUT_REDIRECT_URL = '/agri_market/'
 
 
