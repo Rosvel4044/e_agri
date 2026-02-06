@@ -345,7 +345,7 @@ def modifier_produit(request, produit_id):
 
 #@login_required
 @login_required(login_url='/agri_market/connexion/')
-@require_POST
+#@require_POST
 def supprimer_produit(request, produit_id):
     if request.user.role != 'VENDEUR':
         messages.error(request, "Accès refusé")
@@ -483,7 +483,7 @@ def ajouter_au_panier(request, produit_id):
         messages.error(request, f"Erreur : {str(e)}")
         return redirect('detail_produit', produit_id=produit_id)
 @login_required
-@require_http_methods(["POST"])
+#@require_http_methods(["POST"])
 def modifier_quantite_panier(request, ligne_id):
     """Modifier la quantité d'un article dans le panier"""
     try:
@@ -651,7 +651,7 @@ def commandes_vendeur(request):
 
 
 @login_required
-@require_http_methods(["POST"])
+#@require_http_methods(["POST"])
 def changer_statut_commande(request, commande_id):
     """Changer le statut d'une commande (vendeur)"""
     if request.user.role != 'VENDEUR':
