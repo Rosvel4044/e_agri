@@ -26,7 +26,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     
     # Authentification
-    path('connexion/', views.login, name='connexion'),
+    path('login/', views.login, name='login'),
     path('deconnexion/', views.deconnexion, name='deconnexion'),
     path('inscription/', views.inscription, name='inscription'),
     
