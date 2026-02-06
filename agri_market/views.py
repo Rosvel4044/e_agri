@@ -227,35 +227,49 @@ def detail_produit(request, produit_id):
 # VUES VENDEUR (Gestion)
 # =========================
 
-@login_required
+#@login_required
+@login_required(login_url='/agri_market/connexion/')
 def mes_produits(request):
-    """
-    Lister les produits du vendeur connecté
-    """
-    # Vérifier que l'utilisateur est un vendeur
     if request.user.role != 'VENDEUR':
         messages.error(request, "Accès réservé aux vendeurs")
-        return redirect('liste_produits')
-    
+        return redirect('agri_market:liste_produits')
+
     produits = ServiceProduit.lister_produits_vendeur(request.user.id)
-    
-    context = {
+
+    return render(request, 'mes_produits.html', {
         'produits': produits
-    }
-    
-    return render(request, 'mes_produits.html', context)
+    })
 
 
-@login_required
+#@login_required
+@login_required(login_url='/agri_market/connexion/')
 def ajouter_produit(request):
-    """
-    Ajouter un nouveau produit
-    """
-    # Vérifier que l'utilisateur est un vendeur
     if request.user.role != 'VENDEUR':
         messages.error(request, "Accès réservé aux vendeurs")
-        return redirect('liste_produits')
-    
+        return redirect('agri_market:liste_produits')
+
+    if request.method == 'POST':
+        try:
+            produit = ServiceProduit.creer_produit(
+                vendeur_id=request.user.id,
+                nom=request.POST.get('nom'),
+                prix=float(request.POST.get('prix')),
+                quantite=int(request.POST.get('quantite')),
+                categorie_id=int(request.POST.get('categorie')),
+                description=request.POST.get('description', '')
+            )
+
+            messages.success(request, "Produit ajouté avec succès")
+            return redirect('agri_market:mes_produits')
+
+        except Exception as e:
+            messages.error(request, str(e))
+
+    categories = ServiceCategorie.lister_categories()
+    return render(request, 'ajouter_produit.html', {
+        'categories': categories
+    })
+
     if request.method == 'POST':
         try:
             # Récupérer les données du formulaire
@@ -293,83 +307,57 @@ def ajouter_produit(request):
     return render(request, 'ajouter_produit.html', context)
 
 
-@login_required
+#@login_required
+@login_required(login_url='/agri_market/connexion/')
 def modifier_produit(request, produit_id):
-    """
-    Modifier un produit existant
-    """
     if request.user.role != 'VENDEUR':
         messages.error(request, "Accès réservé aux vendeurs")
-        return redirect('liste_produits')
-    
-    try:
-        produit = ServiceProduit.obtenir_produit(produit_id)
-        
-        # Vérifier que c'est bien le produit du vendeur
-        if produit.vendeur.id != request.user.id:
-            messages.error(request, "Vous ne pouvez modifier que vos propres produits")
-            return redirect('mes_produits')
-        
-        if request.method == 'POST':
-            # Récupérer les données
-            donnees = {
-                'nom': request.POST.get('nom'),
-                'description': request.POST.get('description', ''),
-                'prix': float(request.POST.get('prix')),
-                'quantite': int(request.POST.get('quantite')),
-                'categorie_id': int(request.POST.get('categorie'))
-            }
-            
-            # Modifier le produit
-            produit = ServiceProduit.modifier_produit(
+        return redirect('agri_market:liste_produits')
+
+    produit = ServiceProduit.obtenir_produit(produit_id)
+
+    if produit.vendeur.id != request.user.id:
+        messages.error(request, "Produit non autorisé")
+        return redirect('agri_market:mes_produits')
+
+    if request.method == 'POST':
+        try:
+            ServiceProduit.modifier_produit(
                 produit_id=produit_id,
                 vendeur_id=request.user.id,
-                **donnees
+                nom=request.POST.get('nom'),
+                prix=float(request.POST.get('prix')),
+                quantite=int(request.POST.get('quantite')),
+                categorie_id=int(request.POST.get('categorie')),
+                description=request.POST.get('description', '')
             )
-            
-            messages.success(request, f"Produit '{produit.nom}' modifié avec succès !")
-            return redirect('mes_produits')
-        
-        # GET : afficher le formulaire pré-rempli
-        categories = ServiceCategorie.lister_categories()
-        
-        context = {
-            'produit': produit,
-            'categories': categories
-        }
-        
-        return render(request, 'agri_market/vendeur/modifier_produit.html', context)
-        
-    except (ValidationError, PermissionDenied) as e:
-        messages.error(request, str(e))
-        return redirect('mes_produits')
-    except ValueError:
-        messages.error(request, "Données invalides")
-        return redirect('mes_produits')
+            messages.success(request, "Produit modifié")
+            return redirect('agri_market:mes_produits')
 
+        except Exception as e:
+            messages.error(request, str(e))
 
-@login_required
-@require_http_methods(["POST"])
+    categories = ServiceCategorie.lister_categories()
+    return render(request, 'modifier_produit.html', {
+        'produit': produit,
+        'categories': categories
+    })
+
+#@login_required
+@login_required(login_url='/agri_market/connexion/')
+@require_POST
 def supprimer_produit(request, produit_id):
-    """
-    Supprimer un produit
-    """
     if request.user.role != 'VENDEUR':
-        messages.error(request, "Accès réservé aux vendeurs")
-        return redirect('liste_produits')
-    
-    try:
-        ServiceProduit.supprimer_produit(
-            produit_id=produit_id,
-            vendeur_id=request.user.id
-        )
-        
-        messages.success(request, "Produit supprimé avec succès !")
-        
-    except (ValidationError, PermissionDenied) as e:
-        messages.error(request, str(e))
-    
-    return redirect('mes_produits')
+        messages.error(request, "Accès refusé")
+        return redirect('agri_market:liste_produits')
+
+    ServiceProduit.supprimer_produit(
+        produit_id=produit_id,
+        vendeur_id=request.user.id
+    )
+
+    messages.success(request, "Produit supprimé")
+    return redirect('agri_market:mes_produits')
 
 
 # =========================
