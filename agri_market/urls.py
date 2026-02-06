@@ -46,7 +46,7 @@ urlpatterns = [
     
     # URLs vendeur
     path('mes_produits/', views.mes_produits, name='mes_produits'),
-    path('vendeur/ajouter-produit/', views.ajouter_produit, name='ajouter_produit'),
+    path('ajouter_produit/', views.ajouter_produit, name='ajouter_produit'),
     path('vendeur/modifier-produit/<int:produit_id>/', views.modifier_produit, name='modifier_produit'),
     path('vendeur/supprimer-produit/<int:produit_id>/', views.supprimer_produit, name='supprimer_produit'),
     # URLs vendeur - Commandes
