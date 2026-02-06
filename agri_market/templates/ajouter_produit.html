@@ -8,8 +8,8 @@
         <div class="col-lg-8">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{% url 'mes_produits' %}">Mes Produits</a></li>
-                    <li class="breadcrumb-item"><a href="{% url 'commandes_vendeur' %}">Commandes reçues</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'agri_market:mes_produits' %}">Mes Produits</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'agri_market:commandes_vendeur' %}">Commandes reçues</a></li>
                     <li class="breadcrumb-item active">Ajouter un produit</li>
                 </ol>
             </nav>
@@ -72,7 +72,7 @@
                         <hr>
                         
                         <div class="d-flex justify-content-between">
-                            <a href="{% url 'mes_produits' %}" class="btn btn-secondary">
+                            <a href="{% url 'agri_market:mes_produits' %}" class="btn btn-secondary">
                                 ← Annuler
                             </a>
                             <button type="submit" class="btn btn-success btn-lg">
