@@ -227,7 +227,7 @@ def detail_produit(request, produit_id):
 # VUES VENDEUR (Gestion)
 # =========================
 
-#@login_required
+@login_required
 def mes_produits(request):
     """
     Lister les produits du vendeur connecté
@@ -246,7 +246,7 @@ def mes_produits(request):
     return render(request, 'mes_produits.html', context)
 
 
-#@login_required
+@login_required
 def ajouter_produit(request):
     """
     Ajouter un nouveau produit
