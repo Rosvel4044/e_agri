@@ -1,202 +1,273 @@
 {% extends 'base.html' %}
-
 {% block title %}Accueil - e_agri{% endblock %}
 
+{% block extra_css %}
+<!-- AOS - Animate On Scroll (très léger et magnifique) -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<style>
+    /* Hero */
+    .hero {
+        background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('https://images.unsplash.com/photo-1500595046743-ee5c6d2d5d5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        color: white;
+    }
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: linear-gradient(135deg, rgba(46,125,50,0.4) 0%, rgba(107,165,57,0.3) 100%);
+    }
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Cartes catégories */
+    .category-card {
+        transition: all 0.4s ease;
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+    .category-card:hover {
+        transform: translateY(-12px) scale(1.04);
+        box-shadow: 0 20px 40px rgba(46,125,50,0.25);
+    }
+    .category-icon {
+        font-size: 3.8rem;
+        margin-bottom: 1.2rem;
+        color: var(--primary);
+        transition: transform 0.4s ease;
+    }
+    .category-card:hover .category-icon {
+        transform: scale(1.15) rotate(5deg);
+    }
+
+    /* Statistiques */
+    .stat-number {
+        font-size: 3.8rem;
+        font-weight: 800;
+        color: white;
+    }
+    .stat-label {
+        font-size: 1.25rem;
+        opacity: 0.9;
+    }
+
+    /* CTA vendeur */
+    .cta-vendeur {
+        background: linear-gradient(135deg, #2e7d32 0%, #388e3c 100%);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    }
+    .btn-pulse {
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero { min-height: 70vh; }
+        .stat-number { font-size: 2.8rem; }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<!-- Section Hero -->
-<div class="bg-success text-white py-5" style="background: linear-gradient(135deg, #2d5016 0%, #6ba539 100%);">
-    <div class="container py-5">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="display-3 fw-bold mb-4">🌱 Bienvenue sur e_agri</h1>
-                <p class="lead mb-4">
-                    La plateforme qui met en relation producteurs agricoles et consommateurs 
-                    pour des produits frais, locaux et de qualité.
-                </p>
-                <div class="d-flex gap-3">
-                    <a href="{% url 'agri_market:liste_produits' %}" class="text-success btn-lg">
-                        🛒 Découvrir les produits
-                    </a>
-                    {% if not user.is_authenticated %}
-                        <a href="/admin/login/" class="btn btn-outline-light btn-lg">
-                            👤 Se connecter
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-lg-6 text-center">
-                <div style="font-size: 150px;">
-                    🌾
-                </div>
-            </div>
+
+<!-- Hero -->
+<section class="hero" data-aos="fade-up">
+    <div class="container hero-content text-center">
+        <h1 class="display-3 fw-bold mb-4 text-shadow" data-aos="zoom-in" data-aos-delay="100">
+            🌱 Bienvenue sur <span class="text-warning">e_agri</span>
+        </h1>
+        <p class="lead fs-4 mb-5" data-aos="fade-up" data-aos-delay="300">
+            Des produits frais, locaux et équitables<br>
+            <strong>Directement du producteur au consommateur</strong>
+        </p>
+        <div class="d-flex justify-content-center gap-4 flex-wrap" data-aos="fade-up" data-aos-delay="500">
+            <a href="{% url 'agri_market:liste_produits' %}" class="btn btn-light btn-lg px-5 py-3 fw-bold">
+                🛒 Découvrir les produits
+            </a>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'connexion' %}" class="btn btn-outline-light btn-lg px-5 py-3">
+                    👤 Se connecter / S'inscrire
+                </a>
+            {% endif %}
         </div>
     </div>
-</div>
+</section>
 
-<!-- Section Avantages -->
-<div class="container py-5">
-    <h2 class="text-center mb-5 fw-bold">Pourquoi choisir e_agri ?</h2>
-    
-    <div class="row g-4">
-        <div class="col-md-4">
-            <div class="card h-100 text-center border-0 shadow-sm">
-                <div class="card-body p-4">
-                    <div style="font-size: 60px;" class="mb-3">🌿</div>
-                    <h4 class="card-title">Produits Frais</h4>
-                    <p class="card-text text-muted">
-                        Des produits agricoles fraîchement récoltés, 
-                        directement des producteurs locaux.
-                    </p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-4">
-            <div class="card h-100 text-center border-0 shadow-sm">
-                <div class="card-body p-4">
-                    <div style="font-size: 60px;" class="mb-3">🤝</div>
-                    <h4 class="card-title">Circuit Court</h4>
-                    <p class="card-text text-muted">
-                        Achetez directement aux producteurs sans intermédiaires, 
-                        pour des prix justes.
-                    </p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-4">
-            <div class="card h-100 text-center border-0 shadow-sm">
-                <div class="card-body p-4">
-                    <div style="font-size: 60px;" class="mb-3">🚀</div>
-                    <h4 class="card-title">Simple et Rapide</h4>
-                    <p class="card-text text-muted">
-                        Une plateforme facile à utiliser pour commander 
-                        vos produits en quelques clics.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Section Catégories -->
-<div class="bg-light py-5">
+<!-- Avantages -->
+<section class="py-5 bg-white">
     <div class="container">
-        <h2 class="text-center mb-5 fw-bold">Nos Catégories de Produits</h2>
-        
+        <h2 class="text-center display-5 fw-bold mb-5" data-aos="fade-up">
+            Pourquoi choisir e_agri ?
+        </h2>
         <div class="row g-4">
-            <div class="col-6 col-md-3">
-                <a href="/produits/" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm hover-card">
-                        <div class="card-body text-center p-4">
-                            <div style="font-size: 50px;" class="mb-2">🥬</div>
-                            <h5 class="mb-0">Légumes</h5>
-                        </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="category-card text-center p-4 h-100">
+                    <div class="category-icon">🌿</div>
+                    <h4 class="fw-bold mb-3">Produits ultra-frais</h4>
+                    <p class="text-muted">Récoltés le jour même ou la veille, garantie de fraîcheur maximale.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="category-card text-center p-4 h-100">
+                    <div class="category-icon">🤝</div>
+                    <h4 class="fw-bold mb-3">Prix justes</h4>
+                    <p class="text-muted">Pas d'intermédiaires : plus d'argent revient directement aux producteurs.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="category-card text-center p-4 h-100">
+                    <div class="category-icon">🚀</div>
+                    <h4 class="fw-bold mb-3">Commande en 1 clic</h4>
+                    <p class="text-muted">Paiement sécurisé Mobile Money, livraison rapide ou retrait.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Catégories -->
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center display-5 fw-bold mb-5" data-aos="fade-up">Nos catégories phares</h2>
+        <div class="row g-4">
+            <div class="col-6 col-md-3" data-aos="zoom-in" data-aos-delay="100">
+                <a href="{% url 'agri_market:liste_produits' %}" class="text-decoration-none">
+                    <div class="category-card text-center py-5">
+                        <div class="category-icon">🥬</div>
+                        <h5 class="fw-bold">Légumes</h5>
                     </div>
                 </a>
             </div>
-            
-            <div class="col-6 col-md-3">
-                <a href="/produits/" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm hover-card">
-                        <div class="card-body text-center p-4">
-                            <div style="font-size: 50px;" class="mb-2">🍎</div>
-                            <h5 class="mb-0">Fruits</h5>
-                        </div>
+            <div class="col-6 col-md-3" data-aos="zoom-in" data-aos-delay="150">
+                <a href="{% url 'agri_market:liste_produits' %}" class="text-decoration-none">
+                    <div class="category-card text-center py-5">
+                        <div class="category-icon">🍎</div>
+                        <h5 class="fw-bold">Fruits</h5>
                     </div>
                 </a>
             </div>
-            
-            <div class="col-6 col-md-3">
-                <a href="/produits/" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm hover-card">
-                        <div class="card-body text-center p-4">
-                            <div style="font-size: 50px;" class="mb-2">🌾</div>
-                            <h5 class="mb-0">Céréales</h5>
-                        </div>
+            <div class="col-6 col-md-3" data-aos="zoom-in" data-aos-delay="200">
+                <a href="{% url 'agri_market:liste_produits' %}" class="text-decoration-none">
+                    <div class="category-card text-center py-5">
+                        <div class="category-icon">🌾</div>
+                        <h5 class="fw-bold">Céréales & grains</h5>
                     </div>
                 </a>
             </div>
-            
-            <div class="col-6 col-md-3">
-                <a href="/produits/" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm hover-card">
-                        <div class="card-body text-center p-4">
-                            <div style="font-size: 50px;" class="mb-2">🥔</div>
-                            <h5 class="mb-0">Tubercules</h5>
-                        </div>
+            <div class="col-6 col-md-3" data-aos="zoom-in" data-aos-delay="250">
+                <a href="{% url 'agri_market:liste_produits' %}" class="text-decoration-none">
+                    <div class="category-card text-center py-5">
+                        <div class="category-icon">🥔</div>
+                        <h5 class="fw-bold">Tubercules</h5>
                     </div>
                 </a>
             </div>
         </div>
-        
-        <div class="text-center mt-4">
-            <a href="{% url 'agri_market:liste_produits' %}" class="text-success btn-lg">
+        <div class="text-center mt-5" data-aos="fade-up">
+            <a href="{% url 'agri_market:liste_produits' %}" class="btn btn-success btn-lg px-5 py-3 fw-bold">
                 Voir tous les produits →
             </a>
         </div>
     </div>
-</div>
+</section>
 
-<!-- Section Appel à l'action Vendeurs -->
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card border-success shadow-lg">
-                <div class="card-body text-center p-5">
-                    <h2 class="fw-bold mb-3">Vous êtes producteur ?</h2>
-                    <p class="lead text-muted mb-4">
-                        Rejoignez notre plateforme et vendez vos produits directement 
-                        à des milliers de clients potentiels.
-                    </p>
-                    <div class="d-flex justify-content-center gap-3">
-                        {% if user.is_authenticated and user.role == 'VENDEUR' %}
-                            <a href="/vendeur/mes-produits/" class="btn btn-success btn-lg">
-                                📦 Gérer mes produits
-                            </a>
-                        {% else %}
-                            <a href="/admin/login/" class="btn btn-success btn-lg">
-                                🌱 Devenir vendeur
-                            </a>
-                        {% endif %}
-                        <a href="/produits/" class="btn btn-outline-success btn-lg">
-                            📖 En savoir plus
-                        </a>
-                    </div>
-                </div>
+<!-- Appel à l'action vendeurs -->
+<section class="py-5">
+    <div class="container">
+        <div class="cta-vendeur text-white text-center p-5 rounded-4" data-aos="fade-up">
+            <h2 class="display-5 fw-bold mb-4">Vous êtes producteur agricole ?</h2>
+            <p class="lead mb-5 fs-4" style="max-width: 800px; margin: 0 auto;">
+                Rejoignez des centaines de producteurs qui vendent déjà directement leurs récoltes sans intermédiaires.
+            </p>
+            <div class="d-flex justify-content-center gap-4 flex-wrap">
+                {% if user.is_authenticated and user.role == 'VENDEUR' %}
+                    <a href="/vendeur/dashboard/" class="btn btn-light btn-lg px-5 py-3 fw-bold">
+                        Gérer mes produits
+                    </a>
+                {% else %}
+                    <a href="{% url 'inscription' %}" class="btn btn-light btn-lg px-5 py-3 fw-bold btn-pulse">
+                        Devenir vendeur maintenant
+                    </a>
+                {% endif %}
+                <a href="#" class="btn btn-outline-light btn-lg px-5 py-3">
+                    En savoir plus
+                </a>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<!-- Section Statistiques -->
-<div class="bg-success text-white py-5">
+<!-- Statistiques -->
+<section class="bg-success text-white py-5">
     <div class="container">
         <div class="row text-center">
-            <div class="col-md-4">
-                <h2 class="display-4 fw-bold">500+</h2>
-                <p class="lead">Produits disponibles</p>
+            <div class="col-md-4 mb-4 mb-md-0" data-aos="fade-up">
+                <div class="stat-number" data-count="850">0</div>
+                <p class="stat-label">Produits disponibles</p>
             </div>
-            <div class="col-md-4">
-                <h2 class="display-4 fw-bold">100+</h2>
-                <p class="lead">Producteurs actifs</p>
+            <div class="col-md-4 mb-4 mb-md-0" data-aos="fade-up" data-aos-delay="200">
+                <div class="stat-number" data-count="220">0</div>
+                <p class="stat-label">Producteurs actifs</p>
             </div>
-            <div class="col-md-4">
-                <h2 class="display-4 fw-bold">1000+</h2>
-                <p class="lead">Clients satisfaits</p>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="stat-number" data-count="4500">0</div>
+                <p class="stat-label">Commandes livrées</p>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<style>
-.hover-card {
-    transition: transform 0.3s, box-shadow 0.3s;
-}
+{% endblock %}
 
-.hover-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2) !important;
-}
-</style>
+{% block extra_js %}
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 800,
+        once: true,
+        offset: 100
+    });
+
+    // Compteur animé pour statistiques
+    document.querySelectorAll('[data-count]').forEach(el => {
+        const target = parseInt(el.getAttribute('data-count'));
+        let count = 0;
+        const increment = target / 60; // ~1 seconde
+
+        const updateCount = () => {
+            count += increment;
+            if (count < target) {
+                el.textContent = Math.ceil(count).toLocaleString();
+                requestAnimationFrame(updateCount);
+            } else {
+                el.textContent = target.toLocaleString();
+            }
+        };
+
+        // Déclencher quand visible
+        const observer = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting) {
+                updateCount();
+                observer.disconnect();
+            }
+        });
+        observer.observe(el);
+    });
+</script>
 {% endblock %}
