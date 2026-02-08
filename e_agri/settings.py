@@ -16,9 +16,14 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Page de connexion utilisée par @login_required
 LOGIN_URL = '/agri_market/connexion/'
-LOGIN_REDIRECT_URL = '/agri_market/ajouter_produit'
-LOGOUT_REDIRECT_URL = '/agri_market/'
+
+# Après connexion réussie
+LOGIN_REDIRECT_URL = '/agri_market/'  
+
+# Après déconnexion
+LOGOUT_REDIRECT_URL = '/agri_market/connexion/'
 
 
 
