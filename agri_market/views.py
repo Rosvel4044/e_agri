@@ -189,8 +189,7 @@ def mes_produits(request):
         'produits': produits
     })
 
-
-@login_required
+@login_required(login_url='/agri_market/connexion/')
 def ajouter_produit(request):
     if request.user.role != 'VENDEUR':
         messages.error(request, "Accès réservé aux vendeurs")
