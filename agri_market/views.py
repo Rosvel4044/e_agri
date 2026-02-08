@@ -34,30 +34,63 @@ def home(request):
 # =========================
 
 def connexion(request):
+    """
+    Vue de connexion sans formulaire Django.
+    Accepte email OU username dans le champ 'email'.
+    Gestion du paramètre ?next=
+    Redirection intelligente selon le rôle de l'utilisateur.
+    """
     if request.method == 'POST':
-        email = request.POST.get('email')
+        # Récupération des données du formulaire
+        identifiant = request.POST.get('email')  # champ nommé 'email' mais accepte username ou email
         password = request.POST.get('password')
 
-        user = authenticate(request, username=email, password=password)
+        if not identifiant or not password:
+            messages.error(request, "Veuillez remplir tous les champs.")
+            return render(request, 'connexion.html')
+
+        # Tenter l'authentification
+        # On essaie d'abord avec username = identifiant
+        user = authenticate(request, username=identifiant, password=password)
+
+        # Si ça échoue et que c'est un email, on cherche l'utilisateur par email
+        if user is None and '@' in identifiant:
+            try:
+                from agri_market.models import Utilisateur
+                user_by_email = Utilisateur.objects.get(email__iexact=identifiant)
+                user = authenticate(request, username=user_by_email.username, password=password)
+            except Utilisateur.DoesNotExist:
+                pass
 
         if user is not None:
+            # Vérifier que le compte est actif
+            if not user.is_active:
+                messages.error(request, "Votre compte est désactivé. Contactez l'administrateur.")
+                return render(request, 'connexion.html')
+
+            # Connexion réussie
             login(request, user)
+            messages.success(request, f"Bienvenue {user.get_full_name() or user.username} !")
 
-            # Récupérer next s'il existe
+            # Gestion du paramètre ?next= (sécurité contre open redirect)
             next_url = request.GET.get('next')
-
-            # 🔐 Règle métier : redirection selon le rôle
+            if next_url and next_url.startswith('/'):
+                # next_url valide → redirection vers la page demandée
+                return redirect(next_url)
+            
+            # Sinon : redirection selon le rôle
             if user.role == 'VENDEUR':
-                return redirect(next_url if next_url else 'ajouter_produit')
+                # Redirection vendeur (page d'ajout produit ou dashboard vendeur)
+                return redirect('ajouter_produit')  # ou 'mes_produits' ou reverse('agri_market:mes_produits')
             else:
-                return redirect('home')
+                # Redirection client (accueil ou catalogue)
+                return redirect('home')  # ou 'liste_produits' selon ton choix
 
         else:
-            messages.error(request, "Email ou mot de passe incorrect")
+            messages.error(request, "Email / nom d'utilisateur ou mot de passe incorrect.")
 
+    # GET ou échec → affichage de la page
     return render(request, 'connexion.html')
-
-
 def deconnexion(request):
     """Déconnexion"""
     logout(request)
